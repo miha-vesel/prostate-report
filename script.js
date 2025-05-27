@@ -35,6 +35,7 @@ function generirajIzpis() {
   const snopa = document.getElementById("snopa").value;
   const limfne = document.getElementById("limfne").value;
   const skelet = document.getElementById("skelet").value;
+  const ostalo = document.getElementById("ostalo").value.trim(); // [DODANO: OSTALO]
 
   let izpis = `Protokol: ${protokol}\n\nIndikacija: ${indikacija}`;
   if (klinika) izpis += `\nKlinični podatki:\n${klinika}`;
@@ -43,7 +44,8 @@ function generirajIzpis() {
   if (psa && psad) izpis += `\nPSAD: ${psad} ng/ml/cc`;
 
   if (status === "Ni sumljivih sprememb") {
-    izpis += `\n\nV periferni coni ni sumljivih arealov z restrikcijo difuzije.\nV prehodni coni so vidni dobro omejeni noduli, nesumljivi.\n\nSeminalni vezikuli sta simetrični.\nNevrovaskularna snopa sta primerna.\nPeriprostatično maščevje je strukturno primerno.\nV mali medenici ni proste tekočine.\n${limfne}\n${skelet}`;
+    izpis += `\n\nV periferni coni ni sumljivih arealov z restrikcijo difuzije.\nV prehodni coni so vidni dobro omejeni noduli, nesumljivi.\n\nSeminalni vezikuli sta simetrični.\nNevrovaskularna snopa sta primerna.\nPeriprostatično maščevje je strukturno primerno.\n\nBrez proste tekočine v mali medenici.\n${limfne}\n${skelet}`;
+    if (ostalo) izpis += `\n\n${ostalo}`; // [DODANO: OSTALO]
     izpis += `\n\nZaključek:\n`;
     izpis += parseFloat(volumen) > 30
       ? `Prostata je povečana in spremenjena v sklopu BHP. V prostati ni sumljivih sprememb.`
@@ -54,6 +56,7 @@ function generirajIzpis() {
       .filter(txt => txt.length > 0)
       .join("\n\n");
     izpis += `\n\n${lezijeText}\n\nEkstrakapsularno širjenje: ${epe}\nSeminalni vezikuli: ${semenske}\nNevrovaskularna snopa: ${snopa}\n\nBezgavke:\n${limfne}\n\nSkelet:\n${skelet}`;
+    if (ostalo) izpis += `\n\n${ostalo}`; // [DODANO: OSTALO]
 
     const psadNum = parseFloat(psad);
     let zakljucki = "";
@@ -64,11 +67,11 @@ function generirajIzpis() {
       if (piradsMatch) {
         const pirads = parseInt(piradsMatch[1]);
         if (pirads >= 4) {
-          zakljucki += `Lezija ${index + 1}: PI-RADS ${pirads}. Svetujemo ciljno biopsijo spremembe.\n`;
+          zakljucki += `Lezija ${index + 1}: PI-RADS ${pirads}. Svetujemo ciljano biopsijo spremembe.\n`;
         } else if (pirads === 3) {
           if (!isNaN(psadNum)) {
             zakljucki += psadNum > 0.15
-              ? `Lezija ${index + 1}: PI-RADS 3 ob PSAD ${psadNum.toFixed(3)}. Svetujemo ciljno biopsijo spremembe.\n`
+              ? `Lezija ${index + 1}: PI-RADS 3 ob PSAD ${psadNum.toFixed(3)}. Svetujemo ciljano biopsijo spremembe.\n`
               : `Lezija ${index + 1}: PI-RADS 3 ob PSAD ${psadNum.toFixed(3)}. Svetujemo klinično in MRI kontrolo.\n`;
           } else {
             zakljucki += `Lezija ${index + 1}: PI-RADS 3. PSAD ni znan. Svetujemo klinično in MRI kontrolo.\n`;
@@ -79,8 +82,14 @@ function generirajIzpis() {
     if (zakljucki) izpis += `\n\nZaključek:\n${zakljucki.trim()}`;
   }
 
-  document.getElementById("izpis").value = izpis.trim();
+const izpisElement = document.getElementById("izpis");
+izpisElement.value = izpis.trim();
+
+// Popolna prilagoditev višine
+izpisElement.style.height = "auto"; // najprej resetiramo višino
+izpisElement.style.height = izpisElement.scrollHeight + "px";
 }
+
 
 function kopirajVsebino() {
   const izpis = document.getElementById("izpis");

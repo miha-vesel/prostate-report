@@ -91,12 +91,17 @@
 </div>
 
 <div class="section">
+  <label>Ostalo:</label>
+  <textarea id="ostalo" placeholder="Dodatna opažanja, npr. hernija, ciste, spremembe na mehurju ..."></textarea>
+</div>
+
+<div class="section">
   <button onclick="generirajIzpis()">Generiraj poročilo</button>
   <button onclick="kopirajVsebino()">Kopiraj poročilo</button>
 </div>
 
 <h2>Generirano poročilo</h2>
-<textarea id="izpis" class="autosize" rows="10" readonly oninput="this.style.height='auto';this.style.height=(this.scrollHeight)+'px';"></textarea>
+<textarea id="izpis" class="autosize" rows="10" readonly></textarea>
 
 <script src="script.js"></script>
 </body>
