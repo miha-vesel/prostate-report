@@ -38,7 +38,7 @@ function generirajIzpis() {
   const ostalo = document.getElementById("ostalo").value.trim(); // [DODANO: OSTALO]
 
   let izpis = `MR prostate s KS in MR dinamično slikanje\n${protokol}\n\nIndikacija: ${indikacija}`;
-  if (klinika) izpis += `\nKlinični podatki:\n${klinika}`;
+  if (klinika) izpis += `\nKlinični podatki: ${klinika}`;
   izpis += `\n\nDimenzije prostate: ${sirina} × ${visina} × ${dolzina} mm\nVolumen prostate: ${volumen} cc`;
   izpis += psa ? `\nPSA: ${psa} ng/ml` : `\nVrednost PSA ni navedena.`;
   if (psa && psad) izpis += `\nPSAD: ${psad} ng/ml/cc`;
