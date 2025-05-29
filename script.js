@@ -58,8 +58,8 @@ function generirajIzpis() {
     if (ostalo) izpis += `\n\n${ostalo}`;
     izpis += `\n\nZaključek:\n`;
     izpis += parseFloat(volumen) > 30
-      ? `Prostata je povečana in spremenjena v sklopu BHP. V prostati ni sumljivih sprememb.`
-      : `Prostata je normalno velika. V prostati ni sumljivih sprememb.`;
+      ? `Prostata je povečana in spremenjena v sklopu BHP. V prostati ne vidim signifikantnih lezij.`
+      : `Prostata je normalno velika. V prostati ne vidim signifikantnih lezij.`;
   } else {
     const lezijeText = Array.from(document.querySelectorAll('.lezija'))
       .map((el, i) => el.value.trim())
