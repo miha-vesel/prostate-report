@@ -30,12 +30,14 @@ function generirajIzpis() {
   const visina = document.getElementById("visina").value;
   const dolzina = document.getElementById("dolzina").value;
   const volumen = document.getElementById("volumen").value;
+  const periferna = document.getElementById("periferna").value;
+  const prehodna = document.getElementById("prehodna").value;
   const epe = document.getElementById("epe").value;
   const semenske = document.getElementById("semenske").value;
   const snopa = document.getElementById("snopa").value;
   const limfne = document.getElementById("limfne").value;
   const skelet = document.getElementById("skelet").value;
-  const ostalo = document.getElementById("ostalo").value.trim(); // [DODANO: OSTALO]
+  const ostalo = document.getElementById("ostalo").value.trim();
 
   let izpis = `MR prostate s KS in MR dinamično slikanje\n${protokol}\n\nIndikacija: ${indikacija}`;
   if (klinika) izpis += `\nKlinični podatki: ${klinika}`;
@@ -44,8 +46,8 @@ function generirajIzpis() {
   if (psa && psad) izpis += `\nPSAD: ${psad} ng/ml/cc`;
 
   if (status === "Ni sumljivih sprememb") {
-    izpis += `\n\nV periferni coni ni sumljivih arealov z restrikcijo difuzije.\nV prehodni coni so vidni dobro omejeni noduli, nesumljivi.\n\nSeminalni vezikuli sta simetrični.\nNevrovaskularna snopa sta primerna.\nPeriprostatično maščevje je strukturno primerno.\n\nBrez proste tekočine v mali medenici.\n${limfne}\n${skelet}`;
-    if (ostalo) izpis += `\n\n${ostalo}`; // [DODANO: OSTALO]
+    izpis += `\n\n${periferna}\n${prehodna}\n\nSeminalni vezikuli sta simetrični.\nNevrovaskularna snopa sta primerna.\nPeriprostatično maščevje je strukturno primerno.\n\nBrez proste tekočine v mali medenici.\n${limfne}\n${skelet}`;
+    if (ostalo) izpis += `\n\n${ostalo}`;
     izpis += `\n\nZaključek:\n`;
     izpis += parseFloat(volumen) > 30
       ? `Prostata je povečana in spremenjena v sklopu BHP. V prostati ni sumljivih sprememb.`
@@ -55,8 +57,8 @@ function generirajIzpis() {
       .map((el, i) => el.value.trim())
       .filter(txt => txt.length > 0)
       .join("\n\n");
-    izpis += `\n\n${lezijeText}\n\nEkstrakapsularno širjenje: ${epe}\nSeminalni vezikuli: ${semenske}\nNevrovaskularna snopa: ${snopa}\n\nBezgavke:\n${limfne}\n\nSkelet:\n${skelet}`;
-    if (ostalo) izpis += `\n\n${ostalo}`; // [DODANO: OSTALO]
+    izpis += `\n\n${periferna}\n${prehodna}\n${lezijeText}\n\nEkstrakapsularno širjenje: ${epe}\nSeminalni vezikuli: ${semenske}\nNevrovaskularna snopa: ${snopa}\n\nBezgavke: ${limfne}\nSkelet: ${skelet}`;
+    if (ostalo) izpis += `\n\n${ostalo}`;
 
     const psadNum = parseFloat(psad);
     let zakljucki = "";
@@ -85,8 +87,8 @@ function generirajIzpis() {
 const izpisElement = document.getElementById("izpis");
 izpisElement.value = izpis.trim();
 
-// Popolna prilagoditev višine
-izpisElement.style.height = "auto"; // najprej resetiramo višino
+
+izpisElement.style.height = "auto";
 izpisElement.style.height = izpisElement.scrollHeight + "px";
 }
 
