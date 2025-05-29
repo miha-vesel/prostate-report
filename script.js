@@ -7,11 +7,11 @@ function izracunajVolumenInPSAD() {
   const psa = parseFloat(document.getElementById("psa").value);
 
   if (!isNaN(sirina) && !isNaN(visina) && !isNaN(dolzina)) {
-    const volumen = ((sirina * visina * dolzina) * 0.52 / 1000).toFixed(1);
+    const volumen = ((sirina * visina * dolzina) * 0.52 / 1000).toFixed(0);
     document.getElementById("volumen").value = volumen;
 
     if (!isNaN(psa)) {
-      document.getElementById("psad").value = (psa / volumen).toFixed(3);
+      document.getElementById("psad").value = (psa / volumen).toFixed(2);
     } else {
       document.getElementById("psad").value = "";
     }
@@ -37,7 +37,7 @@ function generirajIzpis() {
   const skelet = document.getElementById("skelet").value;
   const ostalo = document.getElementById("ostalo").value.trim(); // [DODANO: OSTALO]
 
-  let izpis = `Protokol: ${protokol}\n\nIndikacija: ${indikacija}`;
+  let izpis = `MR prostate s KS in MR dinamično slikanje\n${protokol}\n\nIndikacija: ${indikacija}`;
   if (klinika) izpis += `\nKlinični podatki:\n${klinika}`;
   izpis += `\n\nDimenzije prostate: ${sirina} × ${visina} × ${dolzina} mm\nVolumen prostate: ${volumen} cc`;
   izpis += psa ? `\nPSA: ${psa} ng/ml` : `\nVrednost PSA ni navedena.`;
