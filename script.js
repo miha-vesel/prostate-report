@@ -18,6 +18,18 @@ function izracunajVolumenInPSAD() {
   }
 }
 
+document.getElementById("status").addEventListener("change", function () {
+  const selectedValue = this.value;
+  const specialDiv = document.getElementById("indikacija-div");
+
+  if (selectedValue === "2") {
+    specialDiv.style.display = "block";
+  } else {
+    specialDiv.style.display = "none";
+  }
+});
+
+
 function generirajIzpis() {
   izracunajVolumenInPSAD();
   const status = document.getElementById("status").value;
@@ -53,7 +65,7 @@ function generirajIzpis() {
   izpis += psa ? `\nPSA: ${psa} ng/ml` : `\nVrednost PSA ni navedena.`;
   if (psa && psad) izpis += `\nPSAD: ${psad} ng/ml/cc`;
 
-  if (status === "Ni sumljivih sprememb") {
+  if (status === "1") {
     izpis += `\n\n${periferna}\n${prehodna}\n\nSeminalni vezikuli sta simetrični.\nNevrovaskularna snopa sta primerna.\nPeriprostatično maščevje je strukturno primerno.\n\nBrez proste tekočine v mali medenici.\n${limfne}\n${skelet}`;
     if (ostalo) izpis += `\n\n${ostalo}`;
     izpis += `\n\nZaključek:\n`;
