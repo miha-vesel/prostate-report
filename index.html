@@ -38,6 +38,7 @@
     <option>Sum na karcinom</option>
     <option>Aktivno spremljanje</option>
     <option>Lokalno stadiranje</option>
+    <option>Drugo</option>
   </select>
 
   <label>Klinični podatki:</label>
@@ -45,8 +46,8 @@
 
   <label>Status najdb:</label>
   <select id="status">
-    <option value="1">Ni sumljivih sprememb</option>
-    <option value="2">Sumljivo</option>
+    <option>Ni sumljivih sprememb</option>
+    <option>Sumljivo</option>
   </select>
 </div>
 
@@ -55,9 +56,7 @@
   <textarea id="periferna">V periferni coni ni sumljivih arealov z restrikcijo difuzije.</textarea>
   <label>Prehodna cona:</label>
   <textarea id="prehodna">V prehodni coni so vidni inkapsulirani noduli, PI-RADS 1.</textarea>
-</div>
 
-<div class="section" id="indikacija-div" style="display: none;">
   <label>Lezije:</label>
   <div id="lezije">
     <div class="lezija-container">
@@ -67,7 +66,6 @@
   </div>
   <button onclick="dodajLezijo()">Dodaj lezijo</button>
 </div>
-
 
 <div class="section">
   <label>Ekstrakapsularno širjenje (EPE):</label>
