@@ -39,7 +39,15 @@ function generirajIzpis() {
   const skelet = document.getElementById("skelet").value;
   const ostalo = document.getElementById("ostalo").value.trim();
 
-  let izpis = `MR prostate s KS in MR dinamično slikanje\n${protokol}\n\nIndikacija: ${indikacija}`;
+  let zacetek = "";
+  if (protokol === "Multiparametrični pristop (T2W, DWI/ADC, DCE)") {
+    zacetek = "MR prostate s KS in MR dinamično slikanje\n" + protokol;
+  } else {
+    zacetek = "MR prostate\n" + protokol;
+  }
+
+
+  let izpis = `${zacetek}\n\nIndikacija: ${indikacija}`;
   if (klinika) izpis += `\nKlinični podatki: ${klinika}`;
   izpis += `\n\nDimenzije prostate: ${sirina} × ${visina} × ${dolzina} mm\nVolumen prostate: ${volumen} cc`;
   izpis += psa ? `\nPSA: ${psa} ng/ml` : `\nVrednost PSA ni navedena.`;
