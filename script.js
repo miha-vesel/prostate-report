@@ -77,7 +77,7 @@ function generirajIzpis() {
       if (piradsMatch) {
         const pirads = parseInt(piradsMatch[1]);
         if (pirads >= 4) {
-          zakljucki += `Lezija ${index + 1}: PI-RADS ${pirads}. Svetujemo ciljano biopsijo spremembe.\n`;
+          zakljucki += `PI-RADS ${pirads} lezija ${index + 1}. Svetujemo ciljano biopsijo spremembe.\n`;
         } else if (pirads === 3) {
           if (!isNaN(psadNum)) {
             zakljucki += psadNum > 0.15
