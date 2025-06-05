@@ -15,22 +15,25 @@
     <option>Multiparametrični pristop (T2W, DWI/ADC, DCE)</option>
     <option>Biparametrični pristop (T2W, DWI/ADC)</option>
   </select>
-
+ 
   <label>PSA (ng/ml):</label>
   <input type="number" id="psa" step="0.01" placeholder="npr. 6.2">
-
+ 
   <label>Dimenzije prostate (v mm):</label>
   <div class="row">
     <input type="number" id="sirina" placeholder="Širina">
     <input type="number" id="visina" placeholder="Višina">
     <input type="number" id="dolzina" placeholder="Dolžina">
   </div>
+  
+  <div id="skrito">
+    <label>Volumen prostate (cc):</label>
+    <input type="text" id="volumen" readonly>
 
-  <label>Volumen prostate (cc):</label>
-  <input type="text" id="volumen" readonly>
+    <label>PSAD (ng/ml/cc):</label>
+    <input type="text" id="psad" readonly>
+  </div>
 
-  <label>PSAD (ng/ml/cc):</label>
-  <input type="text" id="psad" readonly>
 
   <label>Indikacija:</label>
   <select id="indikacija">
@@ -40,7 +43,7 @@
     <option>Lokalno stadiranje</option>
     <option>Drugo</option>
   </select>
-
+ 
   <label>Klinični podatki:</label>
   <textarea id="klinika"></textarea>
 
@@ -52,10 +55,6 @@
 </div>
 
 <div class="section">
-  <label>Periferna cona:</label>
-  <textarea id="periferna">V periferni coni ni sumljivih arealov z restrikcijo difuzije.</textarea>
-  <label>Prehodna cona:</label>
-  <textarea id="prehodna">V prehodni coni so vidni inkapsulirani noduli, PI-RADS 1.</textarea>
 
   <label>Lezije:</label>
   <div id="lezije">
@@ -65,21 +64,33 @@
     </div>
   </div>
   <button onclick="dodajLezijo()">Dodaj lezijo</button>
+
+  <label>Periferna cona:</label>
+  <textarea id="periferna">V periferni coni ni sumljivih arealov z restrikcijo difuzije.</textarea>
+  <label>Prehodna cona:</label>
+  <textarea id="prehodna">V prehodni coni so vidni inkapsulirani noduli, PI-RADS 1.</textarea>
+
 </div>
 
 <div class="section">
   <label>Ekstrakapsularno širjenje (EPE):</label>
   <select id="epe">
-    <option>Ni znakov</option>
-    <option>Verjetno prisotno</option>
-    <option>Nejasno</option>
+    <option>Ni znakov (EPE gradus 0)</option>
+    <option>EPE gradus 1 (Stik med lezijo in površino prostate večji kot 1,5 cm)</option>
+    <option>EPE gradus 1 (Bočenje/iregularnost kapsule)</option>
+    <option>EPE gradus 2 (Stik med lezijo in površino prostate večji kot 1,5 cm in bočenje/iregularnost kapsule)</option>
+    <option>EPE gradus 3 (Evidentno preraščanje lezije preko kapsule)</option>
   </select>
 
   <label>Seminalni vezikuli:</label>
   <select id="semenske">
-    <option>Brez infiltracije</option>
-    <option>Sum na infiltracijo</option>
-    <option>Infiltracija prisotna</option>
+    <option>Brez vidne infiltracije</option>
+    <option>Sum na infiltracijo desne vezikule</option>
+    <option>Sum na infiltracijo leve vezikule</option>
+    <option>Sum na infiltracijo obeh vezikul</option>
+    <option>Jasna infiltracija desne vezikule</option>
+    <option>Jasna infiltracija leve vezikule</option>
+    <option>Jasna infiltracija obeh vezikul</option>
   </select>
 
   <label>Nevrovaskularna snopa:</label>
