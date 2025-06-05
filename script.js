@@ -54,7 +54,7 @@ function generirajIzpis() {
   if (psa && psad) izpis += `\nPSAD: ${psad} ng/ml/cc`;
 
   if (status === "Ni sumljivih sprememb") {
-    izpis += `\n\n${periferna}\n${prehodna}\n\nSeminalni vezikuli sta simetrični.\nNevrovaskularna snopa sta primerna.\nPeriprostatično maščevje je strukturno primerno.\n\nBrez proste tekočine v mali medenici.\n${limfne}\n${skelet}`;
+    izpis += `\n\n${periferna}\n${prehodna}\n\nSeminalni vezikuli sta simetrični.\nNevrovaskularna snopa sta primerna.\nPeriprostatično maščevje je strukturno primerno.\n\nBrez proste tekočine v mali medenici.\n${limfne}\nBrez sprememb v prikazanem skeletu.`;
     if (ostalo) izpis += `\n\n${ostalo}`;
     izpis += `\n\nZaključek:\n`;
     izpis += parseFloat(volumen) > 30
