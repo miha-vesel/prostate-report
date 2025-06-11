@@ -65,7 +65,7 @@ function generirajIzpis() {
       .map((el, i) => el.value.trim())
       .filter(txt => txt.length > 0)
       .join("\n\n");
-    izpis += `\n\n${periferna}\n${prehodna}\n${lezijeText}\n\nEkstrakapsularno širjenje: ${epe}\nSeminalni vezikuli: ${semenske}\nNevrovaskularna snopa: ${snopa}\n\n${limfne}\n${skelet}`;
+    izpis += `\n\n${lezijeText}\n${periferna}\n${prehodna}\n\nEkstrakapsularno širjenje: ${epe}\nSeminalni vezikuli: ${semenske}\nNevrovaskularna snopa: ${snopa}\n\n${limfne}\n${skelet}`;
     if (ostalo) izpis += `\n\n${ostalo}`;
 
     const psadNum = parseFloat(psad);
