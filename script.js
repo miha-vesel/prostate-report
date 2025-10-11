@@ -21,6 +21,7 @@ function izracunajVolumenInPSAD() {
 function generirajIzpis() {
   izracunajVolumenInPSAD();
   const status = document.getElementById("status").value;
+  const status = document.getElementById("piqual").value;
   const protokol = document.getElementById("protokol").value;
   const indikacija = document.getElementById("indikacija").value;
   const klinika = document.getElementById("klinika").value.trim();
@@ -47,7 +48,7 @@ function generirajIzpis() {
   }
 
 
-  let izpis = `${zacetek}\n\nIndikacija: ${indikacija}`;
+  let izpis = `${zacetek}\n\nIndikacija: ${indikacija}\nKakovost preiskave (PI-QUAL v2): ${piqual}`;
   if (klinika) izpis += `\nKlinični podatki: ${klinika}`;
   izpis += `\n\nDimenzije prostate: ${sirina} × ${visina} × ${dolzina} mm\nVolumen prostate: ${volumen} cc`;
   izpis += psa ? `\nPSA: ${psa} ng/ml` : `\nVrednost PSA ni navedena.`;
