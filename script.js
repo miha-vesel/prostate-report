@@ -26,6 +26,7 @@ function generirajIzpis() {
   const klinika = document.getElementById("klinika").value.trim();
   const psa = document.getElementById("psa").value;
   const psad = document.getElementById("psad").value;
+  const piqual = document.getElementById("piqual").value;
   const sirina = document.getElementById("sirina").value;
   const visina = document.getElementById("visina").value;
   const dolzina = document.getElementById("dolzina").value;
@@ -52,6 +53,7 @@ function generirajIzpis() {
   izpis += `\n\nDimenzije prostate: ${sirina} × ${visina} × ${dolzina} mm\nVolumen prostate: ${volumen} cc`;
   izpis += psa ? `\nPSA: ${psa} ng/ml` : `\nVrednost PSA ni navedena.`;
   if (psa && psad) izpis += `\nPSAD: ${psad} ng/ml/cc`;
+  if (piqual) izpis += `\nPI-QUAL v2: ${piqual}`;
 
   if (status === "Ni sumljivih sprememb") {
     izpis += `\n\n${periferna}\n${prehodna}\n\nSeminalni vezikuli sta simetrični.\nNevrovaskularna snopa sta primerna.\nPeriprostatično maščevje je strukturno primerno.\n\nBrez proste tekočine v mali medenici.\n${limfne}\nBrez sprememb v prikazanem skeletu.`;
