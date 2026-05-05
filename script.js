@@ -273,15 +273,8 @@ function dodajAsLezijo() {
       <div class="precise-col">
         <div class="precise-col-label">Bazalni MR</div>
         <div class="field-group">
-          <label>Vidnost</label>
-          <select class="as-baz-vidnost" data-id="${n}">
-            <option value="vidna">Vidna lezija</option>
-            <option value="nevidna">Nevidna lezija</option>
-          </select>
-        </div>
-        <div class="field-group as-baz-velikost-group">
           <label>Velikost (mm)</label>
-          <input type="number" class="as-baz-velikost" data-id="${n}" placeholder="mm">
+          <input type="number" class="as-baz-velikost" data-id="${n}" placeholder="mm — prazno če nevidna">
         </div>
         <div class="field-group">
           <label>PI-RADS</label>
@@ -322,15 +315,8 @@ function dodajAsLezijo() {
           </select>
         </div>
         <div class="field-group">
-          <label>Vidnost</label>
-          <select class="as-cur-vidnost" data-id="${n}">
-            <option value="vidna">Vidna lezija</option>
-            <option value="nevidna">Nevidna lezija</option>
-          </select>
-        </div>
-        <div class="field-group as-cur-velikost-group">
           <label>Velikost (mm)</label>
-          <input type="number" class="as-cur-velikost" data-id="${n}" placeholder="mm">
+          <input type="number" class="as-cur-velikost" data-id="${n}" placeholder="mm — prazno če nevidna">
         </div>
         <div class="field-group">
           <label>PI-RADS</label>
@@ -365,11 +351,11 @@ function dodajAsLezijo() {
 }
 
 function izracunajPrecise(n) {
-  const bazVidnost = document.querySelector(`.as-baz-vidnost[data-id="${n}"]`)?.value;
   const bazVelikost = parseFloat(document.querySelector(`.as-baz-velikost[data-id="${n}"]`)?.value);
   const bazPirads = parseInt(document.querySelector(`.as-baz-pirads[data-id="${n}"]`)?.value);
-  const curVidnost = document.querySelector(`.as-cur-vidnost[data-id="${n}"]`)?.value;
   const curVelikost = parseFloat(document.querySelector(`.as-cur-velikost[data-id="${n}"]`)?.value);
+  const bazVidnost = !isNaN(bazVelikost) ? "vidna" : "nevidna";
+  const curVidnost = !isNaN(curVelikost) ? "vidna" : "nevidna";
   const curPirads = parseInt(document.querySelector(`.as-cur-pirads[data-id="${n}"]`)?.value);
   const novaSekvenca = document.querySelector(`.as-nova-sekvenca[data-id="${n}"]`)?.value;
 
@@ -396,9 +382,9 @@ function izracunajPrecise(n) {
   const konspikuoznostPovecana = (novaSekvenca === "da");
 
   // PRECISE v2 algoritem
-  if (curVidnost === "nevidna" && bazVidnost === "nevidna") {
+  if (curVidnost === "nevidna") {
     score = "3-NonV";
-    opis = "Stabilna preiskava brez vidne lezije (PRECISE 3-NonV).";
+    opis = "Lezija ni vidna na trenutnem MR (PRECISE 3-NonV).";
   } else if (curVidnost === "vidna" && bazVidnost === "nevidna" && (isNaN(curVelikost) || curVelikost < 6)) {
     score = "3-V";
     opis = "Nova drobna vidna lezija < 6 mm, brez znakov signifikantnega napredovanja (PRECISE 3-V).";
@@ -665,9 +651,9 @@ function generirajPorocilo() {
         const dwiTekst = div.querySelector(`.lez-dwi`)?.value?.trim() || "";
         const dceTekst = div.querySelector(`.lez-dce`)?.value?.trim() || "";
 
-        let lokBesedilo = `${cona}, ${tretjina}, ${stran}`;
-        if (uraOd && uraDo && uraOd !== uraDo) lokBesedilo += `, od ${uraOd}h do ${uraDo}h`;
-        else if (uraOd) lokBesedilo += `, ob ${uraOd}h`;
+        let lokBesedilo = `${cona}, ${tretjina} tretjina, ${stran}`;
+        if (uraOd && uraDo && uraOd !== uraDo) lokBesedilo += `, na ${uraOd}h do ${uraDo}h`;
+        else if (uraOd) lokBesedilo += `, na ${uraOd}h`;
 
         let lezijaTekst = `Lezija ${idx + 1}: ${lokBesedilo}`;
         if (velikost) lezijaTekst += `, velikosti ${velikost} mm`;
@@ -685,9 +671,9 @@ function generirajPorocilo() {
           const psadNum = parseFloat(psad);
           const starost = parseInt(document.getElementById("starost").value);
           const p = parseInt(pirads);
-          let zakLok = `${cona}, ${tretjina}, ${stran}`;
-          if (uraOd && uraDo && uraOd !== uraDo) zakLok += `, od ${uraOd}h do ${uraDo}h`;
-          else if (uraOd) zakLok += `, ob ${uraOd}h`;
+          let zakLok = `${cona}, ${tretjina} tretjina, ${stran}`;
+          if (uraOd && uraDo && uraOd !== uraDo) zakLok += `, na ${uraOd}h do ${uraDo}h`;
+          else if (uraOd) zakLok += `, na ${uraOd}h`;
           let z = `Lezija ${idx + 1} (${zakLok}, ${velikost ? velikost + " mm, " : ""}PI-RADS ${pirads}): `;
           if (p >= 4) {
             z += "Svetujem ciljano biopsijo spremembe.";
@@ -763,13 +749,15 @@ function generirajPorocilo() {
 
     asDivs.forEach((div, idx) => {
       const n = div.dataset.id;
-      const bazVidnost = div.querySelector(".as-baz-vidnost")?.value;
+      const bazVidnostRaw = div.querySelector(".as-baz-velikost")?.value;
+      const bazVidnost = bazVidnostRaw ? "vidna" : "nevidna";
       const bazVelikost = div.querySelector(".as-baz-velikost")?.value;
       const bazPirads = div.querySelector(".as-baz-pirads")?.value;
       const cona = div.querySelector(".as-cona")?.value || "";
       const tretjina = div.querySelector(".as-tretjina")?.value || "";
       const stran = div.querySelector(".as-stran")?.value || "";
-      const curVidnost = div.querySelector(".as-cur-vidnost")?.value;
+      const curVidnostRaw = div.querySelector(".as-cur-velikost")?.value;
+      const curVidnost = curVidnostRaw ? "vidna" : "nevidna";
       const curVelikost = div.querySelector(".as-cur-velikost")?.value;
       const curPirads = div.querySelector(".as-cur-pirads")?.value;
       const badge = document.getElementById(`as-precise-badge-${n}`);
