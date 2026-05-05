@@ -1,0 +1,427 @@
+/* ═══════════════════════════════════════════════════════════
+   CSS SPREMENLJIVKE — SVETLA TEMA
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --bg: #f0f4f8;
+  --bg-section: #ffffff;
+  --bg-lezija: #eef5ff;
+  --border: #d0d9e4;
+  --border-lezija: #4a90d9;
+  --text: #1a202c;
+  --text-label: #2d3748;
+  --text-muted: #718096;
+  --primary: #1a56db;
+  --primary-hover: #1447c0;
+  --secondary: #4b5563;
+  --secondary-hover: #374151;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --input-bg: #ffffff;
+  --input-border: #b0bec5;
+  --input-focus: #1a56db;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.1);
+  --tab-bg: #e2e8f0;
+  --tab-active: #1a56db;
+  --zakljucek-bg: #eff6ff;
+  --zakljucek-border: #3b82f6;
+  --zakljucek-text: #1e40af;
+  --info-bg: #f0fdf4;
+  --info-border: #86efac;
+  --info-text: #166534;
+  --precise-col-bg: #f8fafc;
+  --precise-col-border: #e2e8f0;
+}
+
+[data-tema="temna"] {
+  --bg: #0f172a;
+  --bg-section: #1e293b;
+  --bg-lezija: #1e3a5f;
+  --border: #334155;
+  --border-lezija: #3b82f6;
+  --text: #e2e8f0;
+  --text-label: #cbd5e1;
+  --text-muted: #94a3b8;
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary: #64748b;
+  --secondary-hover: #475569;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --input-bg: #0f172a;
+  --input-border: #475569;
+  --input-focus: #3b82f6;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+  --tab-bg: #1e293b;
+  --tab-active: #3b82f6;
+  --zakljucek-bg: #1e3a5f;
+  --zakljucek-border: #3b82f6;
+  --zakljucek-text: #93c5fd;
+  --info-bg: #052e16;
+  --info-border: #166534;
+  --info-text: #86efac;
+  --precise-col-bg: #0f172a;
+  --precise-col-border: #334155;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   OSNOVA
+   ═══════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  background: var(--bg);
+  color: var(--text);
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 16px;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════════ */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border-lezija);
+}
+
+h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-label);
+  margin-bottom: 10px;
+}
+
+.btn-tema {
+  background: var(--bg-section);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--text);
+  transition: background 0.15s;
+}
+.btn-tema:hover { background: var(--tab-bg); }
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION
+   ═══════════════════════════════════════════════════════════ */
+.section {
+  background: var(--bg-section);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+
+.section-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FIELD GROUPS
+   ═══════════════════════════════════════════════════════════ */
+.field-group {
+  margin-bottom: 12px;
+}
+.field-group:last-child { margin-bottom: 0; }
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text-label);
+  margin-bottom: 4px;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.row input { flex: 1; }
+
+.ura-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ura-row select { flex: 1; }
+
+.dim-sep {
+  color: var(--text-muted);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.volumen-psad-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.volumen-psad-row .field-group { flex: 1; margin-bottom: 0; }
+
+/* ═══════════════════════════════════════════════════════════
+   INPUTS
+   ═══════════════════════════════════════════════════════════ */
+input, select, textarea {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13.5px;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: auto;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+input[readonly] {
+  background: var(--bg);
+  color: var(--text-muted);
+  cursor: default;
+}
+
+textarea { resize: vertical; min-height: 60px; }
+#izpis { min-height: 200px; font-family: 'Courier New', monospace; font-size: 13px; }
+
+/* ═══════════════════════════════════════════════════════════
+   RADIO BUTTONS
+   ═══════════════════════════════════════════════════════════ */
+.radio-group { display: flex; gap: 16px; flex-wrap: wrap; }
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  transition: all 0.15s;
+  font-size: 13.5px;
+  color: var(--text);
+}
+
+.radio-option:hover { border-color: var(--primary); background: var(--zakljucek-bg); }
+.radio-option input[type="radio"] { accent-color: var(--primary); }
+
+/* ═══════════════════════════════════════════════════════════
+   ZAVIHKI
+   ═══════════════════════════════════════════════════════════ */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--tab-bg);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 14px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 9px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.tab-btn:hover { color: var(--text); background: var(--bg-section); }
+
+.tab-btn.active {
+  background: var(--tab-active);
+  color: #ffffff;
+  box-shadow: var(--shadow);
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ═══════════════════════════════════════════════════════════
+   LEZIJE KARTICE
+   ═══════════════════════════════════════════════════════════ */
+.lezija-kartica {
+  background: var(--bg-lezija);
+  border: 1.5px solid var(--border-lezija);
+  border-radius: 9px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.lezija-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.lezija-naziv {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--primary);
+}
+
+.lezija-polja {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.lezija-zakljucek {
+  margin-top: 10px;
+  padding: 9px 12px;
+  background: var(--zakljucek-bg);
+  border-left: 3px solid var(--zakljucek-border);
+  border-radius: 0 6px 6px 0;
+  color: var(--zakljucek-text);
+  font-size: 13px;
+  font-weight: 500;
+  display: none;
+}
+
+/* PI-RADS / PRECISE / PI-RR badge */
+.pirads-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 12px;
+  background: var(--secondary);
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.pirads-1 { background: #6b7280; }
+.pirads-2 { background: #059669; }
+.pirads-3 { background: #d97706; }
+.pirads-4 { background: #dc2626; }
+.pirads-5 { background: #7c3aed; }
+
+.precise-3-V, .precise-3-NonV { background: #059669; }
+.precise-4 { background: #dc2626; }
+.precise-5 { background: #7c3aed; }
+.precise-2 { background: #2563eb; }
+.precise-1 { background: #6b7280; }
+
+/* ═══════════════════════════════════════════════════════════
+   PRECISE — 2 STOLPCA
+   ═══════════════════════════════════════════════════════════ */
+.precise-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.precise-col {
+  background: var(--precise-col-bg);
+  border: 1px solid var(--precise-col-border);
+  border-radius: 7px;
+  padding: 10px 12px;
+}
+
+.precise-col-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INFO TEXT
+   ═══════════════════════════════════════════════════════════ */
+.info-text {
+  font-size: 12.5px;
+  color: var(--info-text);
+  background: var(--info-bg);
+  border: 1px solid var(--info-border);
+  border-radius: 6px;
+  padding: 7px 11px;
+  margin-bottom: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GUMBI
+   ═══════════════════════════════════════════════════════════ */
+.btn-primary, .btn-secondary, .btn-danger {
+  display: inline-block;
+  padding: 9px 18px;
+  border: none;
+  border-radius: 7px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  font-family: inherit;
+}
+.btn-primary:active, .btn-secondary:active, .btn-danger:active { transform: scale(0.98); }
+
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-hover); }
+
+.btn-secondary { background: var(--secondary); color: #fff; }
+.btn-secondary:hover { background: var(--secondary-hover); }
+
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: var(--danger-hover); }
+
+.actions-section { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  body { padding: 10px; }
+  h1 { font-size: 1.1rem; }
+  .tabs { flex-direction: column; }
+  .precise-grid { grid-template-columns: 1fr; }
+  .field-grid { grid-template-columns: 1fr; }
+  .lezija-polja { grid-template-columns: 1fr 1fr; }
+}

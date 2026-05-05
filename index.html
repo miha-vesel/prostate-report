@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="sl" data-tema="svetla">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strukturirano poročilo MRI prostate</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Strukturirano poročilo MRI prostate</h1>
+  <button id="btn-tema" class="btn-tema" title="Preklopi temo">🌙</button>
+</header>
+
+<!-- SKUPNA POLJA -->
+<div class="section" id="skupna-polja">
+  <div class="field-grid">
+    <div class="field-group">
+      <label for="protokol">Protokol preiskave</label>
+      <select id="protokol">
+        <option>Multiparametrični pristop (T2W, DWI/ADC, DCE)</option>
+        <option>Biparametrični pristop (T2W, DWI/ADC)</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label for="psa">PSA (ng/ml)</label>
+      <input type="number" id="psa" step="0.01" placeholder="npr. 6.2">
+    </div>
+    <div class="field-group">
+      <label for="starost">Starost pacienta (leta)</label>
+      <input type="number" id="starost" placeholder="npr. 68">
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label>Dimenzije prostate (mm) — Širina × Višina × Dolžina</label>
+    <div class="row">
+      <input type="number" id="sirina" placeholder="Širina">
+      <span class="dim-sep">×</span>
+      <input type="number" id="visina" placeholder="Višina">
+      <span class="dim-sep">×</span>
+      <input type="number" id="dolzina" placeholder="Dolžina">
+    </div>
+  </div>
+
+  <div id="volumen-psad-container" class="volumen-psad-row" style="display:none">
+    <div class="field-group">
+      <label>Volumen prostate (cc)</label>
+      <input type="text" id="volumen" readonly>
+    </div>
+    <div class="field-group">
+      <label>PSAD (ng/ml/cc)</label>
+      <input type="text" id="psad" readonly>
+    </div>
+  </div>
+
+  <div class="field-grid">
+    <div class="field-group">
+      <label for="piqual">PI-QUAL v2</label>
+      <select id="piqual">
+        <option value="5">5 — Odlična kakovost</option>
+        <option value="4" selected>4 — Zadostna kakovost</option>
+        <option value="3">3 — Mejna kakovost</option>
+        <option value="2">2 — Nezadostna kakovost</option>
+        <option value="1">1 — Neuporabna</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label for="indikacija">Indikacija</label>
+      <select id="indikacija">
+        <option>Povišana vrednost PSA</option>
+        <option>Sum na karcinom</option>
+        <option>Aktivno spremljanje</option>
+        <option>Lokalno stadiranje</option>
+        <option>Drugo</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label for="klinika">Klinični podatki</label>
+    <textarea id="klinika" rows="2" placeholder="Dodatni klinični podatki..."></textarea>
+  </div>
+</div>
+
+<!-- ZAVIHKI -->
+<div class="tabs">
+  <button class="tab-btn active" data-tab="diagnostika">🔍 Diagnostika</button>
+  <button class="tab-btn" data-tab="aktivno">📈 Aktivno spremljanje</button>
+  <button class="tab-btn" data-tab="recidiv">🔄 Lokalni recidiv</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- TAB 1: DIAGNOSTIKA                                  -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="tab-diagnostika" class="tab-content active">
+
+  <div class="section">
+    <label class="section-label">Status najdb</label>
+    <div class="radio-group">
+      <label class="radio-option">
+        <input type="radio" name="status" value="normalno" checked> Ni sumljivih sprememb
+      </label>
+      <label class="radio-option">
+        <input type="radio" name="status" value="sumljivo"> Sumljiva sprememba
+      </label>
+    </div>
+  </div>
+
+  <div class="section" id="lezije-section" style="display:none">
+    <label class="section-label">Lezije</label>
+    <div id="lezije-container"></div>
+    <button class="btn-secondary" id="btn-dodaj-lezijo">+ Dodaj lezijo</button>
+  </div>
+
+  <div class="section">
+    <div class="field-group">
+      <label for="periferna">Periferna cona</label>
+      <textarea id="periferna" rows="2">V periferni coni ni sumljivih arealov z restrikcijo difuzije.</textarea>
+    </div>
+    <div class="field-group">
+      <label for="prehodna">Prehodna cona</label>
+      <textarea id="prehodna" rows="2">V prehodni coni so vidni inkapsulirani noduli, PI-RADS 1.</textarea>
+    </div>
+  </div>
+
+  <div class="section" id="stagiranje-section" style="display:none">
+    <label class="section-label">Lokalno stadiranje</label>
+    <div class="field-grid">
+      <div class="field-group">
+        <label for="epe">Ekstrakapsularno širjenje (EPE)</label>
+        <select id="epe">
+          <option>Ni znakov (EPE gradus 0)</option>
+          <option>EPE gradus 1 — stik z kapsulo &gt; 1,5 cm</option>
+          <option>EPE gradus 1 — bočenje/iregularnost kapsule</option>
+          <option>EPE gradus 2 — stik &gt; 1,5 cm in bočenje kapsule</option>
+          <option>EPE gradus 3 — evidentno preraščanje preko kapsule</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label for="semenske">Seminalni vezikuli</label>
+        <select id="semenske">
+          <option>Brez vidne infiltracije</option>
+          <option>Sum na infiltracijo desne vezikule</option>
+          <option>Sum na infiltracijo leve vezikule</option>
+          <option>Sum na infiltracijo obeh vezikul</option>
+          <option>Jasna infiltracija desne vezikule</option>
+          <option>Jasna infiltracija leve vezikule</option>
+          <option>Jasna infiltracija obeh vezikul</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label for="snopa">Nevrovaskularna snopa</label>
+        <select id="snopa">
+          <option>Primeren videz</option>
+          <option>Zabrisan videz desno</option>
+          <option>Zabrisan videz levo</option>
+          <option>Zabrisan videz obojestransko</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="field-group">
+      <label for="limfne">Bezgavke</label>
+      <textarea id="limfne" rows="2">Brez patološko povečanih bezgavk v mali medenici.</textarea>
+    </div>
+    <div class="field-group">
+      <label for="skelet">Skelet</label>
+      <textarea id="skelet" rows="2">Brez znakov kostnih metastaz.</textarea>
+    </div>
+    <div class="field-group">
+      <label for="ostalo">Ostalo</label>
+      <textarea id="ostalo" rows="2" placeholder="Dodatna opažanja, npr. hernija, ciste, spremembe na mehurju..."></textarea>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- TAB 2: AKTIVNO SPREMLJANJE (PRECISE v2)             -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="tab-aktivno" class="tab-content">
+
+  <div class="section">
+    <label class="section-label">Podatki o predhodnih MR</label>
+    <div class="field-grid">
+      <div class="field-group">
+        <label for="as-datum-bazalni">Datum bazalnega MR</label>
+        <input type="date" id="as-datum-bazalni">
+      </div>
+      <div class="field-group">
+        <label for="as-datum-prejsnji">Datum prejšnjega MR</label>
+        <input type="date" id="as-datum-prejsnji">
+      </div>
+    </div>
+    <div class="field-group">
+      <label for="as-biopsija">Histološki izvid (Gleason / gradus skupina)</label>
+      <input type="text" id="as-biopsija" placeholder="npr. Gleason 3+3, gradus skupina 1">
+    </div>
+  </div>
+
+  <div class="section">
+    <label class="section-label">Lezije — primerjava s predhodnimi MR</label>
+    <p class="info-text">PRECISE score se izračuna avtomatsko. Skupni score preiskave = najvišji score katerekoli lezije.</p>
+    <div id="as-lezije-container"></div>
+    <button class="btn-secondary" id="btn-as-dodaj-lezijo">+ Dodaj lezijo</button>
+  </div>
+
+  <div class="section">
+    <div class="field-group">
+      <label for="as-periferna">Periferna cona</label>
+      <textarea id="as-periferna" rows="2">V periferni coni ni novih sumljivih arealov z restrikcijo difuzije.</textarea>
+    </div>
+    <div class="field-group">
+      <label for="as-prehodna">Prehodna cona</label>
+      <textarea id="as-prehodna" rows="2">V prehodni coni so vidni inkapsulirani noduli, stabilnega videza.</textarea>
+    </div>
+    <div class="field-group">
+      <label for="as-epe">Ekstrakapsularno širjenje</label>
+      <select id="as-epe">
+        <option>Ni znakov ekstrakapsularnega širjenja</option>
+        <option>EPE gradus 1 — novo</option>
+        <option>EPE gradus 2 — novo</option>
+        <option>EPE gradus 3 — novo ali napredovalo (T3a)</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label for="as-semenske">Seminalni vezikuli</label>
+      <select id="as-semenske">
+        <option>Brez vidne infiltracije</option>
+        <option>Sum na infiltracijo desne vezikule — novo (T3b)</option>
+        <option>Sum na infiltracijo leve vezikule — novo (T3b)</option>
+        <option>Sum na infiltracijo obeh vezikul — novo (T3b)</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label for="as-ostalo">Ostalo</label>
+      <textarea id="as-ostalo" rows="2" placeholder="Dodatna opažanja..."></textarea>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- TAB 3: LOKALNI RECIDIV (PI-RR)                      -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div id="tab-recidiv" class="tab-content">
+
+  <div class="section">
+    <label class="section-label">Vrsta predhodnega zdravljenja</label>
+    <div class="radio-group">
+      <label class="radio-option">
+        <input type="radio" name="zdravljenje" value="rrp" checked> Radikalna prostatektomija (RRP)
+      </label>
+      <label class="radio-option">
+        <input type="radio" name="zdravljenje" value="rt"> Radioterapija (RT)
+      </label>
+    </div>
+    <div class="field-grid" style="margin-top:12px">
+      <div class="field-group">
+        <label for="pirr-datum-zdravljenja">Datum zdravljenja</label>
+        <input type="date" id="pirr-datum-zdravljenja">
+      </div>
+      <div class="field-group">
+        <label for="pirr-psa-nadir">PSA nadir po zdravljenju (ng/ml)</label>
+        <input type="number" id="pirr-psa-nadir" step="0.001" placeholder="npr. 0.02">
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="pirr-rrp-section">
+    <label class="section-label">Ocena lokalne lože po RRP — PI-RR</label>
+    <p class="info-text">Po RRP sta DWI in DCE ko-dominantni sekvenci. Končni PI-RR = max(DWI, DCE); če sta oba ≥ 4 → score se zviša na 5.</p>
+    <div id="pirr-rrp-lezije-container"></div>
+    <button class="btn-secondary" id="btn-pirr-rrp-dodaj">+ Dodaj lezijo</button>
+    <div class="field-grid" style="margin-top:16px">
+      <div class="field-group">
+        <label for="pirr-rrp-anastomoza">Vezikourethralna anastomoza</label>
+        <select id="pirr-rrp-anastomoza">
+          <option>Primeren pooperativni videz</option>
+          <option>Fokalna sprememba ob anastomozi</option>
+          <option>Difuzna sprememba ob anastomozi</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label for="pirr-rrp-semenske">Preostanki seminalnih vezikul</label>
+        <select id="pirr-rrp-semenske">
+          <option>Ni vidnih preostankov</option>
+          <option>Sprememba ob desnem preostanku</option>
+          <option>Sprememba ob levem preostanku</option>
+          <option>Sprememba obojestransko</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="pirr-rt-section" style="display:none">
+    <label class="section-label">Ocena prostate po RT — PI-RR</label>
+    <p class="info-text">Po RT sta DWI in DCE ko-dominantni sekvenci. Recidiv je najpogosteje na mestu primarne lezije. Končni PI-RR = max(DWI, DCE); če sta oba ≥ 4 → score se zviša na 5.</p>
+    <div id="pirr-rt-lezije-container"></div>
+    <button class="btn-secondary" id="btn-pirr-rt-dodaj">+ Dodaj lezijo</button>
+  </div>
+
+  <div class="section">
+    <div class="field-group">
+      <label for="pirr-bezgavke">Bezgavke</label>
+      <textarea id="pirr-bezgavke" rows="2">Brez patološko povečanih bezgavk v mali medenici.</textarea>
+    </div>
+    <div class="field-group">
+      <label for="pirr-skelet">Skelet</label>
+      <textarea id="pirr-skelet" rows="2">Brez znakov kostnih metastaz v prikazanem skeletu.</textarea>
+    </div>
+    <div class="field-group">
+      <label for="pirr-ostalo">Ostalo</label>
+      <textarea id="pirr-ostalo" rows="2" placeholder="Dodatna opažanja..."></textarea>
+    </div>
+  </div>
+
+</div>
+
+<!-- AKCIJSKI GUMBI -->
+<div class="section actions-section">
+  <button class="btn-primary" id="btn-generiraj">⚡ Generiraj poročilo</button>
+  <button class="btn-secondary" id="btn-kopiraj">📋 Kopiraj poročilo</button>
+  <button class="btn-danger" id="btn-pocisti">🗑 Počisti</button>
+</div>
+
+<div class="section">
+  <h2>Generirano poročilo</h2>
+  <textarea id="izpis" readonly placeholder="Poročilo se bo prikazalo tukaj..."></textarea>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
