@@ -156,9 +156,19 @@ function dodajLezijo() {
         </select>
       </div>
     </div>
-    <div class="field-group" style="margin-top:8px">
-      <label>Dodatni opis lezije (neobvezno)</label>
-      <textarea class="lez-opis" data-id="${n}" rows="2" placeholder="npr. hipointenzna na T2, restrikcija difuzije..."></textarea>
+    <div class="sekvence-grid" style="margin-top:8px">
+      <div class="field-group">
+        <label>T2WI</label>
+        <input type="text" class="lez-t2" data-id="${n}" placeholder="npr. hipointenzna, nodularna...">
+      </div>
+      <div class="field-group">
+        <label>DWI/ADC</label>
+        <input type="text" class="lez-dwi" data-id="${n}" placeholder="npr. restrikcija difuzije...">
+      </div>
+      <div class="field-group lez-dce-group">
+        <label>DCE</label>
+        <input type="text" class="lez-dce" data-id="${n}" placeholder="npr. zgodnje KS...">
+      </div>
     </div>
     <div class="lezija-zakljucek" id="diag-zakljucek-${n}"></div>
   `;
@@ -227,8 +237,18 @@ function posodobiDiagBadge(n) {
 
 document.getElementById("btn-dodaj-lezijo").addEventListener("click", () => {
   dodajLezijo();
+  posodobiDcePrikaz();
   shraniStanje();
 });
+
+function posodobiDcePrikaz() {
+  const jeBipar = document.getElementById("protokol").value.includes("Biparametrični");
+  document.querySelectorAll(".lez-dce-group").forEach(el => {
+    el.style.display = jeBipar ? "none" : "block";
+  });
+}
+
+document.getElementById("protokol").addEventListener("change", posodobiDcePrikaz);
 
 
 // ═══════════════════════════════════════════════════════════
@@ -326,12 +346,10 @@ function dodajAsLezijo() {
       </div>
     </div>
     <div class="field-group" style="margin-top:8px">
-      <label>Sprememba v konspikuoznosti</label>
-      <select class="as-konspikuoznost" data-id="${n}">
-        <option value="stabilna">Stabilna konspikuoznost</option>
-        <option value="povecana">Povečana konspikuoznost</option>
-        <option value="zmanjsana">Zmanjšana konspikuoznost</option>
-        <option value="nova-sekvenca">Vidna na novi sekvenci</option>
+      <label>Vidna na novi sekvenci glede na prejšnji MR</label>
+      <select class="as-nova-sekvenca" data-id="${n}">
+        <option value="ne">Ne</option>
+        <option value="da">Da</option>
       </select>
     </div>
     <div class="lezija-zakljucek" id="as-zakljucek-${n}"></div>
@@ -353,7 +371,7 @@ function izracunajPrecise(n) {
   const curVidnost = document.querySelector(`.as-cur-vidnost[data-id="${n}"]`)?.value;
   const curVelikost = parseFloat(document.querySelector(`.as-cur-velikost[data-id="${n}"]`)?.value);
   const curPirads = parseInt(document.querySelector(`.as-cur-pirads[data-id="${n}"]`)?.value);
-  const konspikuoznost = document.querySelector(`.as-konspikuoznost[data-id="${n}"]`)?.value;
+  const novaSekvenca = document.querySelector(`.as-nova-sekvenca[data-id="${n}"]`)?.value;
 
   const badge = document.getElementById(`as-precise-badge-${n}`);
   const zakljucekEl = document.getElementById(`as-zakljucek-${n}`);
@@ -375,7 +393,7 @@ function izracunajPrecise(n) {
   const novaLezija = (bazVidnost === "nevidna" && curVidnost === "vidna" && !isNaN(curVelikost) && curVelikost >= 6);
   const piradsNarascanje = (!isNaN(bazPirads) && !isNaN(curPirads) && curPirads > bazPirads && curPirads >= 4);
   const piradsZmanjsanje = (!isNaN(bazPirads) && !isNaN(curPirads) && curPirads < bazPirads);
-  const konspikuoznostPovecana = (konspikuoznost === "povecana" || konspikuoznost === "nova-sekvenca");
+  const konspikuoznostPovecana = (novaSekvenca === "da");
 
   // PRECISE v2 algoritem
   if (curVidnost === "nevidna" && bazVidnost === "nevidna") {
@@ -396,11 +414,11 @@ function izracunajPrecise(n) {
     if (novaLezija) opis += "nova lezija ≥ 6 mm; ";
     if (velikostnaSpremembaPozitivna) opis += "signifikantno povečanje velikosti (> ~50% vol); ";
     if (piradsNarascanje) opis += "zvišanje PI-RADS na 4 ali 5; ";
-    if (konspikuoznostPovecana) opis += "povečana konspikuoznost; ";
+    if (konspikuoznostPovecana) opis += "vidna na novi sekvenci; ";
     opis = opis.replace(/; $/, "") + " (PRECISE 4). Svetujem ponovitev biopsije.";
   } else if (curVidnost === "vidna") {
     score = "3-V";
-    opis = "Stabilna vidna lezija (PRECISE 3-V).";
+    opis = "Stabilna vidna lezija, brez znakov signifikantne spremembe (PRECISE 3-V).";
   } else {
     score = "3-NonV";
     opis = "Stabilna preiskava (PRECISE 3-NonV).";
@@ -643,7 +661,9 @@ function generirajPorocilo() {
         const uraDo = div.querySelector(`.lez-ura-do`)?.value || "";
         const velikost = div.querySelector(`.lez-velikost`)?.value || "";
         const pirads = div.querySelector(`.lez-pirads`)?.value || "";
-        const opis = div.querySelector(`.lez-opis`)?.value?.trim() || "";
+        const t2 = div.querySelector(`.lez-t2`)?.value?.trim() || "";
+        const dwiTekst = div.querySelector(`.lez-dwi`)?.value?.trim() || "";
+        const dceTekst = div.querySelector(`.lez-dce`)?.value?.trim() || "";
 
         let lokBesedilo = `${cona}, ${tretjina}, ${stran}`;
         if (uraOd && uraDo && uraOd !== uraDo) lokBesedilo += `, od ${uraOd}h do ${uraDo}h`;
@@ -652,7 +672,12 @@ function generirajPorocilo() {
         let lezijaTekst = `Lezija ${idx + 1}: ${lokBesedilo}`;
         if (velikost) lezijaTekst += `, velikosti ${velikost} mm`;
         if (pirads) lezijaTekst += `, PI-RADS ${pirads}`;
-        if (opis) lezijaTekst += `.\n${opis}`;
+        lezijaTekst += `.`;
+        let sekv = [];
+        if (t2) sekv.push(`na T2WI ${t2}`);
+        if (dwiTekst) sekv.push(`na DWI ${dwiTekst}`);
+        if (dceTekst) sekv.push(`na DCE ${dceTekst}`);
+        if (sekv.length > 0) lezijaTekst += `\nLezija je ${sekv.join(", ")}.`;
         lezijeOdstavki.push(lezijaTekst);
 
         // Zaključek
@@ -660,7 +685,10 @@ function generirajPorocilo() {
           const psadNum = parseFloat(psad);
           const starost = parseInt(document.getElementById("starost").value);
           const p = parseInt(pirads);
-          let z = `Lezija ${idx + 1} (${cona}, ${tretjina}, ${stran}, ${velikost ? velikost + " mm, " : ""}PI-RADS ${pirads}): `;
+          let zakLok = `${cona}, ${tretjina}, ${stran}`;
+          if (uraOd && uraDo && uraOd !== uraDo) zakLok += `, od ${uraOd}h do ${uraDo}h`;
+          else if (uraOd) zakLok += `, ob ${uraOd}h`;
+          let z = `Lezija ${idx + 1} (${zakLok}, ${velikost ? velikost + " mm, " : ""}PI-RADS ${pirads}): `;
           if (p >= 4) {
             z += "Svetujem ciljano biopsijo spremembe.";
           } else if (p === 3) {
@@ -678,7 +706,20 @@ function generirajPorocilo() {
       });
 
       izpis += `\n${lezijeOdstavki.join("\n\n")}`;
-      izpis += `\n\n${periferna}\n${prehodna}`;
+
+      // Pogojni izpis con glede na lokacijo lezij
+      const coneLezij = Array.from(lezijeDivs).map(d => d.querySelector(".lez-cona")?.value || "");
+      const imaLezijoPZ = coneLezij.some(c => c === "PZ");
+      const imaLezijTZ = coneLezij.some(c => c === "TZ");
+
+      const perifernaTekst = imaLezijoPZ
+        ? periferna.replace(/^V periferni coni/, "Drugje v periferni coni")
+        : periferna;
+      const prehodnaTekst = imaLezijTZ
+        ? prehodna.replace(/^V prehodni coni so vidni inkapsulirani noduli, PI-RADS 1\./, "V prehodni coni so vidni še inkapsulirani noduli.")
+        : prehodna;
+
+      izpis += `\n\n${perifernaTekst}\n${prehodnaTekst}`;
 
       const epe = document.getElementById("epe").value;
       const semenske = document.getElementById("semenske").value;

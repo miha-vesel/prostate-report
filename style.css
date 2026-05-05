@@ -425,3 +425,14 @@ textarea { resize: vertical; min-height: 60px; }
   .field-grid { grid-template-columns: 1fr; }
   .lezija-polja { grid-template-columns: 1fr 1fr; }
 }
+
+/* Sekvence grid (T2/DWI/DCE) */
+.sekvence-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .sekvence-grid { grid-template-columns: 1fr; }
+}
