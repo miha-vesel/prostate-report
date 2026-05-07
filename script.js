@@ -618,9 +618,12 @@ function generirajPorocilo() {
 
     if (status === "normalno") {
       izpis += `\n${periferna}\n${prehodna}`;
-      izpis += `\n\nSeminalni vezikuli sta simetrični, brez znakov infiltracije.`;
-      izpis += `\nNevrovaskularna snopa sta primernega videza.`;
-      izpis += `\nPeriprostatično maščevje je strukturno primerno.`;
+      const normSemenske = document.getElementById("norm-semenske").value;
+      const normSnopa = document.getElementById("norm-snopa").value;
+      const normPeriprostatično = document.getElementById("norm-periprostatično").value;
+      izpis += `\n\nSeminalni vezikuli: ${normSemenske}.`;
+      izpis += `\nNevrovaskularna snopa: ${normSnopa}.`;
+      izpis += `\nPeriprostatično maščevje: ${normPeriprostatično}.`;
       izpis += `\n\nBrez proste tekočine v mali medenici.`;
       izpis += `\n${limfne}`;
       if (skelet) izpis += `\n${skelet}`;
