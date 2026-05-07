@@ -593,6 +593,8 @@ function generirajPorocilo() {
 
   let izpis = `${naslov}\n\nIndikacija: ${indikacija}`;
   if (klinika) izpis += `\nKlinični podatki: ${klinika}`;
+  const dre = document.getElementById("dre").value.trim();
+  if (dre) izpis += `\nDRE: ${dre}`;
 
   if (sirina && visina && dolzina) {
     izpis += `\n\nDimenzije prostate: ${sirina} × ${visina} × ${dolzina} mm`;
@@ -949,6 +951,7 @@ function shraniStanje() {
     piqual: document.getElementById("piqual").value,
     indikacija: document.getElementById("indikacija").value,
     klinika: document.getElementById("klinika").value,
+    dre: document.getElementById("dre").value,
     aktivniTab,
   };
   localStorage.setItem("stanje", JSON.stringify(skupna));
@@ -969,6 +972,7 @@ function naložiStanje() {
     set("piqual", s.piqual);
     set("indikacija", s.indikacija);
     set("klinika", s.klinika);
+    set("dre", s.dre);
     izracunajVolumenInPSAD();
 
     // Nastavi tab
