@@ -271,7 +271,7 @@ function dodajAsLezijo() {
     </div>
     <div class="precise-grid">
       <div class="precise-col">
-        <div class="precise-col-label">Bazalni MR</div>
+        <div class="precise-col-label">Osnovni MR</div>
         <div class="field-group">
           <label>Velikost (mm)</label>
           <input type="number" class="as-baz-velikost" data-id="${n}" placeholder="mm — prazno če nevidna">
@@ -734,13 +734,14 @@ function generirajPorocilo() {
     const asSemenske = document.getElementById("as-semenske").value;
     const asOstalo = document.getElementById("as-ostalo").value.trim();
 
-    if (datBazalni) izpis += `\nBazalni MR: ${formatDatum(datBazalni)}`;
+    if (datBazalni) izpis += `\nOsnovni MR: ${formatDatum(datBazalni)}`;
     if (datPrejsnji) izpis += `\nPrejšnji MR: ${formatDatum(datPrejsnji)}`;
     if (biopsija) izpis += `\nHistološki izvid: ${biopsija}`;
 
     // Lezije
     const asDivs = document.querySelectorAll("#as-lezije-container .lezija-kartica");
-    let asLezijeOdstavki = [];
+    let vidneLezije = [];      // lezije z meritvami
+    let nevidneLezije = [];    // lezije brez meritev (3-NonV)
     let maxPreciseScore = 0;
     let maxPreciseLabel = "";
     let preciseZakljucki = [];
@@ -749,15 +750,11 @@ function generirajPorocilo() {
 
     asDivs.forEach((div, idx) => {
       const n = div.dataset.id;
-      const bazVidnostRaw = div.querySelector(".as-baz-velikost")?.value;
-      const bazVidnost = bazVidnostRaw ? "vidna" : "nevidna";
       const bazVelikost = div.querySelector(".as-baz-velikost")?.value;
       const bazPirads = div.querySelector(".as-baz-pirads")?.value;
       const cona = div.querySelector(".as-cona")?.value || "";
       const tretjina = div.querySelector(".as-tretjina")?.value || "";
       const stran = div.querySelector(".as-stran")?.value || "";
-      const curVidnostRaw = div.querySelector(".as-cur-velikost")?.value;
-      const curVidnost = curVidnostRaw ? "vidna" : "nevidna";
       const curVelikost = div.querySelector(".as-cur-velikost")?.value;
       const curPirads = div.querySelector(".as-cur-pirads")?.value;
       const badge = document.getElementById(`as-precise-badge-${n}`);
@@ -765,14 +762,22 @@ function generirajPorocilo() {
       const scoreText = badge ? badge.textContent.replace("PRECISE ", "") : "";
       const zakljucekTekst = zakljucekEl ? zakljucekEl.textContent : "";
 
-      let tekst = `Lezija ${idx + 1}: ${cona}, ${tretjina}, ${stran}`;
-      if (bazVelikost && curVelikost) tekst += ` — velikost: ${bazVelikost} mm → ${curVelikost} mm`;
-      else if (curVelikost) tekst += `, ${curVelikost} mm`;
-      if (bazPirads && curPirads) tekst += `; PI-RADS: ${bazPirads} → ${curPirads}`;
-      if (scoreText && scoreText !== "—") tekst += `; PRECISE ${scoreText}`;
-      asLezijeOdstavki.push(tekst);
+      const jenevidna = !bazVelikost && !curVelikost;
 
-      if (zakljucekTekst) preciseZakljucki.push(`Lezija ${idx + 1}: ${zakljucekTekst}`);
+      if (jenevidna) {
+        // Nevidna lezija — ne generiramo vrstice lezije, samo zaključek
+        nevidneLezije.push(scoreText);
+      } else {
+        // Vidna lezija
+        let tekst = `Lezija ${idx + 1}: ${cona}, ${tretjina} tretjina, ${stran}`;
+        if (bazVelikost && curVelikost) tekst += ` — velikost: ${bazVelikost} mm → ${curVelikost} mm`;
+        else if (curVelikost) tekst += `, ${curVelikost} mm`;
+        if (bazPirads && curPirads) tekst += `; PI-RADS: ${bazPirads} → ${curPirads}`;
+        if (scoreText && scoreText !== "—") tekst += `; PRECISE ${scoreText}`;
+        vidneLezije.push(tekst);
+
+        if (zakljucekTekst) preciseZakljucki.push(`Lezija ${idx + 1}: ${zakljucekTekst}`);
+      }
 
       // Max PRECISE score
       const v = preciseVrstni[scoreText] || 0;
@@ -782,19 +787,54 @@ function generirajPorocilo() {
       }
     });
 
-    izpis += `\n\n${asLezijeOdstavki.join("\n")}`;
-    izpis += `\n\n${asPeriferna}\n${asPrehodna}`;
-    izpis += `\nEkstrakapsularno širjenje: ${asEpe}`;
-    izpis += `\nSeminalni vezikuli: ${asSemenske}`;
+    // Izpis vidnih lezij (samo če obstajajo)
+    if (vidneLezije.length > 0) {
+      izpis += `\n\n${vidneLezije.join("\n")}`;
+    }
+
+    // Periferna/prehodna — prilagojeno glede na cone vidnih lezij
+    const conVideLezij = vidneLezije.map((_, i) => {
+      const div = document.querySelectorAll("#as-lezije-container .lezija-kartica")[i];
+      return div?.querySelector(".as-cona")?.value || "";
+    });
+    const imaVidnoPZ = conVideLezij.some(c => c === "PZ");
+    const imaVidnoTZ = conVideLezij.some(c => c === "TZ");
+
+    const perifernaAS = imaVidnoPZ
+      ? asPeriferna.replace(/^V periferni coni/, "Drugje v periferni coni")
+      : asPeriferna;
+    const prehodnaAS = imaVidnoTZ
+      ? asPrehodna.replace(/^V prehodni coni so vidni inkapsulirani noduli, stabilnega videza\./, "V prehodni coni so vidni še inkapsulirani noduli, stabilnega videza.")
+      : asPrehodna;
+
+    izpis += `\n\n${perifernaAS}\n${prehodnaAS}`;
+
+    // EPE in seminalne vezikule — čist izpis
+    const asEpeJeOk = asEpe.includes("Ni znakov");
+    const asSemenskeJeOk = asSemenske.includes("Brez vidne infiltracije");
+    if (asEpeJeOk) izpis += `\nNi znakov ekstrakapsularnega širjenja.`;
+    else izpis += `\nEkstrakapsularno širjenje: ${asEpe}.`;
+    if (asSemenskeJeOk) izpis += `\nBrez vidne infiltracije seminalnih vezikul.`;
+    else izpis += `\n${asSemenske}.`;
+
+    // Bezgavke, skelet, prosta tekočina
+    izpis += `\nNi patološko povečanih bezgavk v mali medenici.`;
+    izpis += `\nBrez sprememb v prikazanem skeletu.`;
+
     if (asOstalo) izpis += `\n\n${asOstalo}`;
 
-    if (maxPreciseLabel) {
-      izpis += `\n\nSkupni PRECISE v2 score: ${maxPreciseLabel}`;
-    }
+    // Zaključek
+    const vol = parseFloat(volumen);
+    const bhp = !isNaN(vol) && vol > 30;
+    izpis += `\n\nZaključek:`;
 
-    if (preciseZakljucki.length > 0) {
-      izpis += `\n\nZaključek:\n${preciseZakljucki.join("\n")}`;
+    if (maxPreciseLabel === "3-NonV" && vidneLezije.length === 0) {
+      // Vse lezije nevidne
+      izpis += `\nV prostati ne vidim za tumor oz. signifikantno lezijo suspektnih sprememb — stabilno stanje, PRECISE 3-NonV.`;
+    } else if (preciseZakljucki.length > 0) {
+      izpis += `\n${preciseZakljucki.join("\n")}`;
     }
+    if (bhp) izpis += `\nProstata je povečana, spremenjena v sklopu BHP.`;
   }
 
   // ─── Tab 3: Lokalni recidiv (PI-RR) ───
