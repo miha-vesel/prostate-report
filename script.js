@@ -632,7 +632,7 @@ function generirajPorocilo() {
       izpis += `\n\nZaključek:\n`;
       const vol = parseFloat(volumen);
       if (!isNaN(vol) && vol > 30) {
-        izpis += `Prostata je povečana in spremenjena v sklopu benigno hiperplastičnih sprememb. V prostati ne vidim znakov za maligno rast.`;
+        izpis += `Prostata je povečana in spremenjena v sklopu benigno hiperplastičnih sprememb. V prostati ne vidim za PI-RADS 4 ali PI-RADS 5 sumljivih sprememb.`;
       } else {
         izpis += `Prostata je normalno velika. V prostati ne vidim znakov za maligno rast.`;
       }
